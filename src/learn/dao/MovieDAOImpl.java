@@ -18,7 +18,7 @@ public class MovieDAOImpl implements MovieDAO {
 		String sql = "INSERT INTO MOVIES VALUES(MOVIE_SEQ.NEXTVAL,?,?,?,?)";
 		ResultSet rs = null;
 		try (Connection conn = DBUtil.getConnection(); 
-				PreparedStatement stmt = conn.prepareStatement(sql)) {//,Statement.RETURN_GENERATED_KEYS
+				PreparedStatement stmt = conn.prepareStatement(sql,new String[]{"MOVIE_ID"})) {//,Statement.RETURN_GENERATED_KEYS
 			
 			stmt.setString(1, newMovie.getTitle());
 			stmt.setString(2, newMovie.getGenre());
@@ -26,10 +26,10 @@ public class MovieDAOImpl implements MovieDAO {
 			stmt.setInt(4, newMovie.getRealeaseYear());
 			stmt.executeUpdate();
 			
-//			rs = stmt.getGeneratedKeys();
-//			if(rs.next()){
-//				newMovie.setMovieId(rs.getInt(1));
-//			}
+			rs = stmt.getGeneratedKeys();
+			if(rs.next()){
+				newMovie.setMovieId(rs.getInt(1));
+			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
